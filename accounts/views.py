@@ -1,7 +1,11 @@
 # Create your views here.
+from django.http import HttpResponse
 
 from .models import *
 
+# selected_related와 prefetch_related의 차이점
+# selected는 하나의 쿼리로 related objects를 모두 다 가져온다
+# prefetch는 main query가 실행된 뒤 별도의 쿼리를 따로 실행한다.
 
 def sel(request):
     if request.method == "GET":
@@ -17,7 +21,23 @@ def sel(request):
         person = pet.person
         country = person.country
 
-    # return HttpResponse(pet.person)
-#
-# def pre(request):
-#     if request.method == "GET":
+    return HttpResponse(pet.person)
+
+def pre(request):
+    if request.method == "GET":
+        # 쿼리 7번
+        # people = Person.objects.all()
+        # for person in people:
+        #     print(f'{person.name} : ', end="")
+        #     for language in person.language_set.all():
+        #         print(f'{language.name}', end="")
+        #     print("")
+
+        people = Person.objects.prefetch_related('language_set').all()
+        for person in people:
+            print(f'{person.name} : ', end="")
+            for language in person.language_set.all():
+                print(f'{language.name}', end="")
+            print("")
+
+        # return HttpResponse('asdf')

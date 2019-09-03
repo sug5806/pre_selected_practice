@@ -24,3 +24,12 @@ class Pet(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Language(models.Model):
+    # Person의 입장에서는 Language를 불러오려면 Language_set이라 해야함
+    person_set = models.ManyToManyField(Person)
+    name = models.CharField(max_length=10,)
+
+    def __str__(self):
+        return self.name
